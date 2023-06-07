@@ -22,4 +22,33 @@ def get_loyal_clients():
     else:
         'Something is wrong. Try again.'
 
+@app.post('/api/client')
+def new_client():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    results = run_statement('CALL create_client(?,?)', [username, password])
+    if(type(results) == list):
+        json_results = json.dumps(results, default=str)
+        return json_results
+    else:
+        'Something is wrong. Try again.'
+
+@app.patch('/api/client-points')
+def patch_client_points():
+    username = request.json.get('username')
+    points = request.json.get('points')
+    results = run_statement('CALL update_points(?,?)', [username, points])
+    if(type(results) == list):
+        json_results = json.dumps(results, default=str)
+        return json_results
+    else:
+        'Something is wrong. Try again.'
+
+@app.delete('/api/client')
+def delete_client():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    results = run_statement('CALL delete_client(?,?)', [username, password])
+    return json.dumps(results, default=str)
+
 app.run(debug=True)
